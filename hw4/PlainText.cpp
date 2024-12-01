@@ -1,9 +1,10 @@
 #include "PlainText.h"
-
+int PlainText::numOfTexts = 0;
 PlainText::PlainText(string text)
 {
 	this->text = text;
 	this->_isEncrypted = false;
+	numOfTexts++;
 }
 
 PlainText::~PlainText()

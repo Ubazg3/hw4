@@ -1,8 +1,10 @@
+#include "CaesarText.h"
 #include "SubstitutionText.h"
-#include <fstream>
 #include <iostream>
+#include <fstream>
 #include <windows.h> // WinApi header - needed for setting console color
 #include <string>
+#include "PlainText.h"
 
 using std::cout;
 using std::endl;
@@ -34,13 +36,6 @@ void set_console_color(unsigned int color)
 	SetConsoleTextAttribute(hConsole, color);
 }
 
-std::string getSubTextinfo(const SubstitutionText& s)
-{
-	return
-		"[text: " + s.getText() +
-		", encrypted: " + (s.isEncrypted() ? "true" : "false") + "]";
-}
-
 void printSubDictionary(const std::string csvFileName)
 {
 	std::cout << "Printing \"" << csvFileName << "\"..." << std::endl;
@@ -55,140 +50,251 @@ void printSubDictionary(const std::string csvFileName)
 	}
 }
 
-bool test2Sub()
+bool test3Static()
 {
 	bool result = false;
 
 	try
 	{
-		// Tests Ex4 part 2 - SubstitutionText
+		// Tests Ex4 part 3 - Static
 
-		set_console_color(BLUE);
+		set_console_color(LIGHT_PURPLE);
 		cout <<
-			"*****************************\n" <<
-			"Test 2 - SubstitutionText \n" <<
-			"*****************************\n" << endl;
+			"**********************************\n" <<
+			"Test 3 - Static fields & methods \n" <<
+			"**********************************\n" << endl;
 		set_console_color(WHITE);
 
+		///////////////
+		// ShiftText //
+		///////////////
+
+		cout <<
+			"Checking ShiftText::encrypt ... \n" << endl;
+
+		std::string text = "abcdefghijklmnopqrstuvwxyz";
+		cout << "Text: \"" << text << "\" , key = 10" << endl;
+		std::string expected = "klmnopqrstuvwxyzabcdefghij";
+		std::string got = ShiftText::encrypt(text, 10);
+
+		cout << "Expected: " << expected << endl;
+		cout << "Got     : " << got << endl;
+		if (got != expected)
+		{
+			set_console_color(RED);
+			cout << "FAILED: ShiftText information is not as expected" <<
+				"check function ShiftText::encrypt()\n";
+			set_console_color(WHITE);
+			return false;
+		}
+
+		text = "abc, def, ghi, jkl, mno, pqr, stu, vwx, yz.";
+		cout << "\nText: \"" << text << "\" , key = 5" << endl;
+		expected = "fgh, ijk, lmn, opq, rst, uvw, xyz, abc, de.";
+		got = ShiftText::encrypt(text, 5);
+
+		cout << "Expected: " << expected << endl;
+		cout << "Got     : " << got << endl;
+		if (got != expected)
+		{
+			set_console_color(RED);
+			cout << "FAILED: ShiftText information is not as expected\n" <<
+				"check function ShiftText::encrypt()\n";
+			set_console_color(WHITE);
+			return false;
+		}
+
+		cout <<
+			"\nChecking ShiftText::decrypt ... \n" << endl;
+
+		text = "klmnopqrstuvwxyzabcdefghij";
+		cout << "Text: \"" << text << "\" , key = 10" << endl;
+		expected = "abcdefghijklmnopqrstuvwxyz";
+		got = ShiftText::decrypt(text, 10);
+
+		cout << "Expected: " << expected << endl;
+		cout << "Got     : " << got << endl;
+		if (got != expected)
+		{
+			set_console_color(RED);
+			cout << "FAILED: ShiftText information is not as expected" <<
+				"check function ShiftText::decrypt()\n";
+			set_console_color(WHITE);
+			return false;
+		}
+
+		text = "fgh, ijk, lmn, opq, rst, uvw, xyz, abc, de.";
+		cout << "\nText: \"" << text << "\" , key = 5" << endl;
+		expected = "abc, def, ghi, jkl, mno, pqr, stu, vwx, yz.";
+		got = ShiftText::decrypt(text, 5);
+
+		cout << "Expected: " << expected << endl;
+		cout << "Got     : " << got << endl;
+		if (got != expected)
+		{
+			set_console_color(RED);
+			cout << "FAILED: ShiftText information is not as expected\n" <<
+				"check function ShiftText::decrypt()\n";
+			set_console_color(WHITE);
+			return false;
+		}
+
+		////////////////
+		// CaesarText //
+		////////////////
+
+		cout << "\nChecking CaesarText::encrypt ... \n" << endl;
+
+		text = "roses are red, my name is dave, this makes no sense, microwave.";
+		cout << "Text: \"" << text << "\"" << endl;
+		expected = "urvhv duh uhg, pb qdph lv gdyh, wklv pdnhv qr vhqvh, plfurzdyh.";
+		got = CaesarText::encrypt(text);
+
+		cout << "Expected: " << expected << endl;
+		cout << "Got     : " << got << endl;
+		if (got != expected)
+		{
+			set_console_color(RED);
+			cout << "FAILED: CaesarText information is not as expected" <<
+				"check function CaesarText::encrypt()\n";
+			set_console_color(WHITE);
+			return false;
+		}
+
+		cout << "\nChecking CaesarText::decrypt ... \n" << endl;
+
+		text = "urvhv duh uhg, pb qdph lv gdyh, wklv pdnhv qr vhqvh, plfurzdyh.";
+		cout << "Text: \"" << text << "\"" << endl;
+		expected = "roses are red, my name is dave, this makes no sense, microwave.";
+		got = CaesarText::decrypt(text);
+
+		cout << "Expected: " << expected << endl;
+		cout << "Got     : " << got << endl;
+		if (got != expected)
+		{
+			set_console_color(RED);
+			cout << "FAILED: CaesarText information is not as expected" <<
+				"check function CaesarText::decrypt()\n";
+			set_console_color(WHITE);
+			return false;
+		}
+
+		//////////////////////
+		// SubstitutionText //
+		//////////////////////
+
+		std::cout << "\n";
 		const std::string dictFile = "dictionary.csv";
 		printSubDictionary(dictFile);
 
-		cout <<
-			"\nInitializing SubstitutionText object s1 with text = \"abcdefghijk\" , key = " << dictFile << "... \n" << endl;
-		SubstitutionText s1("abcdefghijk", dictFile);
+		cout << "\nChecking SubstitutionText::encrypt ..." << endl;
 
-		std::string expected = "[text: rovpxdncwes, encrypted: true]";
-		std::string got = getSubTextinfo(s1);
+		text = "abc, def, ghi, jkl, mno, pqr, stu, vwx, yz.";
+		cout << "\nText: \"" << text << "\" , key = " << dictFile << endl;
+		expected = "rov, pxd, ncw, esm, bzi, jta, uqh, kfy, lg.";
+		got = SubstitutionText::encrypt(text, dictFile);
+
 		cout << "Expected: " << expected << endl;
 		cout << "Got     : " << got << endl;
 		if (got != expected)
 		{
 			set_console_color(RED);
 			cout << "FAILED: SubstitutionText information is not as expected\n" <<
-				"check functions SubstitutionText(text, filename), PlainText::getText(), PlainText::isEncrypted()\n";
+				"check function SubstitutionText::encrypt()\n";
 			set_console_color(WHITE);
 			return false;
 		}
 
-		cout <<
-			"\nCalling s1.decrypt() ... \n" << endl;
+		text = "sometimes when i close my eyes, i cant see.";
+		cout << "\nText: \"" << text << "\" , key = " << dictFile << endl;
+		expected = "uibxqwbxu fcxz w vmiux bl xlxu, w vrzq uxx.";
+		got = SubstitutionText::encrypt(text, dictFile);
 
-		s1.decrypt();
-		expected = "[text: abcdefghijk, encrypted: false]";
-		got = getSubTextinfo(s1);
 		cout << "Expected: " << expected << endl;
 		cout << "Got     : " << got << endl;
 		if (got != expected)
 		{
 			set_console_color(RED);
 			cout << "FAILED: SubstitutionText information is not as expected\n" <<
-				"check function SubstitutionText::decrypt()\n";
+				"check function SubstitutionText::encrypt()\n";
 			set_console_color(WHITE);
 			return false;
 		}
 
-		cout <<
-			"\nCalling s1.decrypt() again ... \n" << endl;
+		cout << "\nChecking SubstitutionText::decrypt ..." << endl;
 
-		s1.decrypt();
-		expected = "[text: abcdefghijk, encrypted: false]";
-		got = getSubTextinfo(s1);
+		text = "rov, pxd, ncw, esm, bzi, jta, uqh, kfy, lg.";
+		cout << "\nText: \"" << text << "\" , key = " << dictFile << endl;
+		expected = "abc, def, ghi, jkl, mno, pqr, stu, vwx, yz.";
+		got = SubstitutionText::decrypt(text, dictFile);
+
 		cout << "Expected: " << expected << endl;
 		cout << "Got     : " << got << endl;
 		if (got != expected)
 		{
 			set_console_color(RED);
 			cout << "FAILED: SubstitutionText information is not as expected\n" <<
-				"Not suppose to encrypt twice\n";
+				"check function SubstitutionText::encrypt()\n";
 			set_console_color(WHITE);
 			return false;
 		}
 
-		cout <<
-			"\nCalling s1.encrypt() ... \n" << endl;
+		text = "uibxqwbxu fcxz w vmiux bl xlxu, w vrzq uxx.";
+		cout << "\nText: \"" << text << "\" , key = " << dictFile << endl;
+		expected = "sometimes when i close my eyes, i cant see.";
+		got = SubstitutionText::decrypt(text, dictFile);
 
-		s1.encrypt();
-		expected = "[text: rovpxdncwes, encrypted: true]";
-		got = getSubTextinfo(s1);
 		cout << "Expected: " << expected << endl;
 		cout << "Got     : " << got << endl;
 		if (got != expected)
 		{
 			set_console_color(RED);
 			cout << "FAILED: SubstitutionText information is not as expected\n" <<
-				"check function SubstitutionText::decrypt()\n";
+				"check function SubstitutionText::encrypt()\n";
 			set_console_color(WHITE);
 			return false;
 		}
 
-		cout <<
-			"\nCalling s1.encrypt() again... \n" << endl;
+		/////////////////////////
+		// Number of instances //
+		/////////////////////////
 
-		s1.encrypt();
-		expected = "[text: rovpxdncwes, encrypted: true]";
-		got = getSubTextinfo(s1);
+		cout << "\nPrinting number of instances -- PlainText::numOfTexts " << std::endl;
+
+		expected = "0";
+		got = std::to_string(PlainText::numOfTexts);
 		cout << "Expected: " << expected << endl;
 		cout << "Got     : " << got << endl;
 		if (got != expected)
 		{
 			set_console_color(RED);
-			cout << "FAILED: SubstitutionText information is not as expected\n" <<
-				"Not suppose to encrypt twice\n";
+			cout << "FAILED: Cannot print PlainText::numOfTexts ...\n" <<
+				"is the field numOfTexts private? it should be public...\n";
 			set_console_color(WHITE);
 			return false;
 		}
 
-		cout <<
-			"\nInitializing SubstitutionText object s2 with text = \"this is a string with comma, space and dots ...\" , key = "
-			<< dictFile << "... \n" << endl;
-		SubstitutionText s2("this is a string with comma, space and dots ...", dictFile);
+		cout << "\nInitializing 5 instances\n"
+			<< "{PlainText p1, Shiftext s1, PlainText p2, CaesarText c1, SubstitutionText sb1}"
+			<< std::endl;
 
-		expected = "[text: qcwu wu r uqawzn fwqc vibbr, ujrvx rzp piqu ..., encrypted: true]";
-		got = getSubTextinfo(s2);
+		PlainText p1("blabla");
+		ShiftText s1("Yalla yalla", 4);
+		PlainText p2("zoom zoom zoom");
+		CaesarText c1("abcdefghi");
+		SubstitutionText sb1("boo foo zoo", "dictionary.csv");
+
+		cout << "\nPrinting number of instances -- PlainText::numOfTexts " << std::endl;
+
+		expected = "5";
+		got = std::to_string(PlainText::numOfTexts);
 		cout << "Expected: " << expected << endl;
 		cout << "Got     : " << got << endl;
 		if (got != expected)
 		{
 			set_console_color(RED);
-			cout << "FAILED: SubstitutionText information is not as expected\n" <<
-				"check functions SubstitutionText(text, filename), PlainText::getText(), PlainText::isEncrypted()\n";
-			set_console_color(WHITE);
-			return false;
-		}
-
-
-		cout <<
-			"\nCalling s2.decrypt() ... \n" << endl;
-		s2.decrypt();
-		expected = "[text: this is a string with comma, space and dots ..., encrypted: false]";
-		got = getSubTextinfo(s2);
-		cout << "Expected: " << expected << endl;
-		cout << "Got     : " << got << endl;
-		if (got != expected)
-		{
-			set_console_color(RED);
-			cout << "FAILED: SubstitutionText information is not as expected\n" <<
-				"check functions SubstitutionText(text, filename), PlainText::getText(), PlainText::isEncrypted()\n";
+			cout << "FAILED: Expected different value on PlainText::numOfTexts ...\n" <<
+				"Did you count all Text class objects?...\n";
 			set_console_color(WHITE);
 			return false;
 		}
@@ -205,7 +311,7 @@ bool test2Sub()
 	}
 
 	set_console_color(LIGHT_GREEN);
-	cout << "\n########## ShiftText & CaesarText - TEST Passed!!! ##########\n\n";
+	cout << "\n########## Static fields & methods - TEST Passed!!! ##########\n\n";
 	set_console_color(WHITE);
 
 	return true;
@@ -219,16 +325,16 @@ int main()
 	std::cout <<
 		"###################################\n" <<
 		"Exercise 4 - Encryption\n" <<
-		"Part 2 - SubstitutionText\n" <<
+		"Part 3 - Static\n" <<
 		"###################################\n" << std::endl;
 	set_console_color(WHITE);
 
-	bool testResult = test2Sub();
+	bool testResult = test3Static();
 
 	if (testResult)
 	{
 		set_console_color(GREEN);
-		std::cout << "\n########## Ex4 SubstitutionText Tests Passed!!! ##########" << "\n\n";
+		std::cout << "\n########## Ex4 Static fields & methods Tests Passed!!! ##########" << "\n\n";
 		set_console_color(WHITE);
 	}
 	else

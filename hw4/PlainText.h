@@ -7,6 +7,7 @@ protected:
     string text;
     bool _isEncrypted;
 public:
+    static int numOfTexts;
     PlainText(string text);
     ~PlainText();
     bool isEncrypted() const;
