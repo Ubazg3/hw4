@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 using std::string;
+using std::ostream;
 class PlainText
 {
 protected:
@@ -14,5 +15,6 @@ public:
     ~PlainText();
     bool isEncrypted() const;
     string getText() const;
+    friend ostream& operator<<(ostream& os, const PlainText& obj);
 };
 #endif

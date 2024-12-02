@@ -1,6 +1,5 @@
 #ifndef Substitution_H
 #define Substitution_H
-#include <iostream>
 #include <string>
 #include "PlainText.h"
 #include <fstream>
@@ -17,5 +16,6 @@ public:
     static string decrypt(string text, string dictionaryFileName);
     string encrypt();
     string decrypt();
+    friend ostream& operator<<(ostream& os, const SubstitutionText& obj);
 };
 #endif

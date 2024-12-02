@@ -14,5 +14,6 @@ public:
     static string decrypt(string text);
     string encrypt();
     string decrypt();
+    friend ostream& operator<<(ostream& os, const CaesarText& obj);
 };
 #endif
