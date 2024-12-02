@@ -1,3 +1,5 @@
+#ifndef ShiftText_H
+#define ShiftText_H
 #include <iostream>
 #include <string>
 #include "PlainText.h"
@@ -14,3 +16,4 @@ public:
     string encrypt();
     string decrypt();
 };
+#endif

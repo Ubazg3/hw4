@@ -1,3 +1,5 @@
+#ifndef Substitution_H
+#define Substitution_H
 #include <iostream>
 #include <string>
 #include "PlainText.h"
@@ -16,3 +18,4 @@ public:
     string encrypt();
     string decrypt();
 };
+#endif

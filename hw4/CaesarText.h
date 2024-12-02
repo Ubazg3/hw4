@@ -1,3 +1,5 @@
+#ifndef CaesarText_H
+#define CaesarText_H
 #include <iostream>
 #include <string>
 #include "ShiftText.h"
@@ -13,3 +15,4 @@ public:
     string encrypt();
     string decrypt();
 };
+#endif

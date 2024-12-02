@@ -4,7 +4,6 @@
 #include <fstream>
 #include <windows.h> // WinApi header - needed for setting console color
 #include <string>
-#include "PlainText.h"
 
 using std::cout;
 using std::endl;

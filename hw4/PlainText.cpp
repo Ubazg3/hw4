@@ -9,7 +9,7 @@ PlainText::PlainText(string text)
 
 PlainText::~PlainText()
 {
-
+	numOfTexts--;
 }
 
 bool PlainText::isEncrypted() const

@@ -1,3 +1,5 @@
+#ifndef PlainText_H
+#define PlainText_H
 #include <iostream>
 #include <string>
 using std::string;
@@ -13,3 +15,4 @@ public:
     bool isEncrypted() const;
     string getText() const;
 };
+#endif
